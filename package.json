@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "memora",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "front-end",
+    "back-end"
+  ],
+  "scripts": {
+    "front": "bun run --filter @memora/front dev",
+    "back": "bun run --filter @memora/back dev",
+    "all": "bun run front & bun run back",
+    "build-front": "bun run --filter @memora/front build",
+    "build-back": "bun run --filter @memora/back build",
+    "build": "bun run build-front && bun run build-back",
+    "lint": "bun run --filter @memora/front lint && bun run --filter @memora/back lint",
+    "format": "bun run --filter @memora/front format"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5"
+  }
+}
