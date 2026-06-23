@@ -14,7 +14,10 @@ const app = new Elysia()
       },
     }),
   )
-  .get("/", () => "Hello World!");
+  .get("/", () => "Hello World!")
+  .get("/user", ({ user }) => user, {
+    auth: true,
+  });
 
 app.listen(3000);
 
