@@ -9,6 +9,12 @@ const app = new Elysia()
   .use(
     openapi({
       documentation: {
+        info: {
+          title: "@memora/API",
+          description:
+            "Example of using Memora API with Elysia and Better Auth.",
+          version: "1.0.0",
+        },
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
       },
