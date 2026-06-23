@@ -1,6 +1,6 @@
 # Memora
 
-![Memora App Preview](./assets/memora.png)
+![Memora App logo](./assets/memora.png)
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x_|_6.x-blue?style=for-the-badge&logo=typescript&logoColor=white)
 ![Bun](https://img.shields.io/badge/Bun-latest-black?style=for-the-badge&logo=bun&logoColor=white)
