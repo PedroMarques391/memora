@@ -11,10 +11,10 @@
   "scripts": {
     "front": "bun run --filter @memora/front dev",
     "back": "bun run --filter @memora/back dev",
-    "all": "bun run front & bun run back",
+    "all": "bun run build & bun run front & bun run back",
     "build-front": "bun run --filter @memora/front build",
     "build-back": "bun run --filter @memora/back build",
-    "build": "bun run build-front && bun run build-back",
+    "build": "bun run --filter @memora/core build",
     "lint": "bun run --filter @memora/front lint && bun run --filter @memora/back lint",
     "format": "bun run --filter @memora/front format"
   },

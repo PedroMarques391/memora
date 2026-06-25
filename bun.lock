@@ -20,7 +20,7 @@
         "pg": "^8.22.0",
       },
       "devDependencies": {
-        "@core": "workspace:*",
+        "@memora/core": "workspace:*",
         "@types/pg": "^8.20.0",
         "bun-types": "latest",
         "drizzle-kit": "^0.31.10",
@@ -31,8 +31,8 @@
       "name": "@memora/front",
       "version": "0.0.1",
       "devDependencies": {
-        "@core": "workspace:*",
         "@eslint/js": "^10.0.1",
+        "@memora/core": "workspace:*",
         "@sveltejs/adapter-vercel": "^6.3.3",
         "@sveltejs/kit": "^2.63.0",
         "@sveltejs/package": "^2.5.8",
@@ -65,7 +65,8 @@
       },
     },
     "packages/core": {
-      "name": "@core",
+      "name": "@memora/core",
+      "version": "1.0.0",
       "devDependencies": {
         "@types/bun": "latest",
       },
@@ -96,8 +97,6 @@
     "@blazediff/core": ["@blazediff/core@1.9.1", "", {}, "sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA=="],
 
     "@borewit/text-codec": ["@borewit/text-codec@0.2.2", "", {}, "sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ=="],
-
-    "@core": ["@core@workspace:packages/core"],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
 
@@ -206,6 +205,8 @@
     "@mapbox/node-pre-gyp": ["@mapbox/node-pre-gyp@2.0.3", "", { "dependencies": { "consola": "^3.2.3", "detect-libc": "^2.0.0", "https-proxy-agent": "^7.0.5", "node-fetch": "^2.6.7", "nopt": "^8.0.0", "semver": "^7.5.3", "tar": "^7.4.0" }, "bin": { "node-pre-gyp": "bin/node-pre-gyp" } }, "sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg=="],
 
     "@memora/back": ["@memora/back@workspace:back-end"],
+
+    "@memora/core": ["@memora/core@workspace:packages/core"],
 
     "@memora/front": ["@memora/front@workspace:front-end"],
 
