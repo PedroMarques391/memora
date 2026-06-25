@@ -2,18 +2,37 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
-  integer,
   pgTable,
   text,
   timestamp,
-  varchar,
+  uuid,
 } from "drizzle-orm/pg-core";
 
-export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+export const deckTable = pgTable("deck", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+export const cardsTable = pgTable("card", {
+  cardId: uuid().primaryKey().defaultRandom(),
+  deckId: uuid("deck_id")
+    .notNull()
+    .references(() => deckTable.id, { onDelete: "cascade" }),
+  front: text("front").notNull(),
+  back: text("back").notNull(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => new Date())
+    .notNull(),
+  reviewCount: text("review_count").default("0").notNull(),
 });
 
 export const user = pgTable("user", {
