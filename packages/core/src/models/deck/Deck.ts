@@ -6,3 +6,5 @@ export interface Deck {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type CreateDeckProps = Omit<Deck, "id" | "createdAt" | "updatedAt">;
