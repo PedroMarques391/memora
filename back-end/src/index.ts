@@ -1,5 +1,6 @@
 import { openapi } from "@elysia/openapi";
 import { Elysia } from "elysia";
+import z from "zod";
 import { OpenAPI } from "./lib/auth";
 import { betterAuth } from "./macros/auth-macro";
 import { deckRoutes } from "./modules/deck/deck.router";
@@ -23,13 +24,16 @@ const app = elysiaSetup
     openapi({
       documentation: {
         info: {
-          title: "@memora/API",
+          title: "memora/API",
           description:
             "Example of using Memora API with Elysia and Better Auth.",
           version: "1.0.0",
         },
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
+      },
+      mapJsonSchema: {
+        zod: z.toJSONSchema,
       },
     }),
   )
