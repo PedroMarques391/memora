@@ -3,7 +3,12 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build.ts",
+    "start": "bun run build && ./build/server",
+    "studio": "bunx --bun drizzle-kit studio",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down"
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
