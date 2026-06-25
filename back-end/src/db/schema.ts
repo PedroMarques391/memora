@@ -9,20 +9,21 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const deckTable = pgTable("deck", {
-  id: uuid().primaryKey().defaultRandom(),
+  id: uuid().primaryKey().defaultRandom().notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  createdAt: timestamp("created_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
+    .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
 });
 
 export const cardsTable = pgTable("card", {
-  cardId: uuid().primaryKey().defaultRandom(),
+  cardId: uuid("card_id").primaryKey().defaultRandom().notNull(),
   deckId: uuid("deck_id")
     .notNull()
     .references(() => deckTable.id, { onDelete: "cascade" }),
