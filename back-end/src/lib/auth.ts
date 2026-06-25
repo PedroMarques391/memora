@@ -4,7 +4,7 @@ import { openAPI } from "better-auth/plugins";
 import { db } from "../db";
 
 export const auth = betterAuth({
-  basePath: "/auth",
+  basePath: "api/v1/auth",
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -17,7 +17,7 @@ export const auth = betterAuth({
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>;
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema());
 export const OpenAPI = {
-  getPaths: (prefix = "/auth") =>
+  getPaths: (prefix = "api/v1/auth") =>
     getSchema().then(({ paths }) => {
       const reference: typeof paths = Object.create(null);
       for (const path of Object.keys(paths)) {
