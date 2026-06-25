@@ -1,8 +1,21 @@
 {
-  "name": "@core",
-  "module": "index.ts",
+  "name": "@memora/core",
+  "version": "1.0.0",
   "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
   "private": true,
+  "scripts": {
+    "build": "tsc -b"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
