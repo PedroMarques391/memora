@@ -1,4 +1,4 @@
-import { DeckRepository } from "@memora/core";
+import { CreateDeckProps, DeckRepository } from "@memora/core";
 
 export default class DeckService {
   constructor(private readonly deckRepository: DeckRepository) {}
@@ -14,5 +14,18 @@ export default class DeckService {
       throw new Error(`Deck with id ${id} not found`);
     }
     return deck;
+  }
+
+  async createDeck(
+    deck: CreateDeckProps,
+  ): Promise<{ id: string; response: string }> {
+    const createdDeck = await this.deckRepository.create(deck);
+    if (!createdDeck) {
+      throw new Error("Failed to create deck");
+    }
+    return {
+      id: createdDeck.id,
+      response: "Deck created successfully",
+    };
   }
 }
