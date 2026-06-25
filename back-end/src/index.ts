@@ -1,12 +1,24 @@
 import { openapi } from "@elysia/openapi";
 import { Elysia } from "elysia";
-import { auth, OpenAPI } from "./lib/auth";
+import { OpenAPI } from "./lib/auth";
 import { betterAuth } from "./macros/auth-macro";
 import { deckRoutes } from "./modules/deck/deck.router";
 
-const app = new Elysia()
+const elysiaSetup = new Elysia({ prefix: "/api/v1", name: "memora-api" })
   .use(betterAuth)
-  .mount(auth.handler)
+  .onStart(() => {
+    console.log(
+      `🦊 Elysia is running at ${elysiaSetup.server?.hostname}:${elysiaSetup.server?.port}`,
+    );
+  })
+  .onStop(() => {
+    console.log("🦊 Memora API is shutting down");
+  });
+
+export type ElysiaSetup = typeof elysiaSetup;
+
+const app = elysiaSetup
+  .group("/decks", (app) => app.use(deckRoutes))
   .use(
     openapi({
       documentation: {
@@ -21,14 +33,13 @@ const app = new Elysia()
       },
     }),
   )
-  .use(deckRoutes)
-  .get("/", () => "Hello World!")
+  .get(
+    "/",
+    () =>
+      "Hi, this is the Memora API. Please refer to the documentation at /openapi for more information.",
+  )
   .get("/user", ({ user }) => user, {
     auth: true,
   });
 
 app.listen(3000);
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
