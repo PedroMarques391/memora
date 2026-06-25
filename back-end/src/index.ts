@@ -2,6 +2,7 @@ import { openapi } from "@elysia/openapi";
 import { Elysia } from "elysia";
 import { auth, OpenAPI } from "./lib/auth";
 import { betterAuth } from "./macros/auth-macro";
+import { deckRoutes } from "./modules/deck/deck.router";
 
 const app = new Elysia()
   .use(betterAuth)
@@ -20,6 +21,7 @@ const app = new Elysia()
       },
     }),
   )
+  .use(deckRoutes)
   .get("/", () => "Hello World!")
   .get("/user", ({ user }) => user, {
     auth: true,
