@@ -15,7 +15,8 @@
     "better-auth": "^1.6.20",
     "drizzle-orm": "^0.45.2",
     "elysia": "latest",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@memora/core": "workspace:*",
