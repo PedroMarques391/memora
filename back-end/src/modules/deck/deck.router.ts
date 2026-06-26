@@ -23,7 +23,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
             set.status = 500;
             return { error: error.message };
           }
-          console.error(error);
           set.status = 500;
           return { error: "An unexpected error occurred" };
         }
@@ -48,7 +47,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
               set.status = 500;
               return { error: error.message };
             }
-            console.error(error);
             set.status = 500;
             return { error: "An unexpected error occurred" };
           }
@@ -92,7 +90,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
               set.status = 500;
               return { error: error.message };
             }
-            console.error(error);
             set.status = 500;
             return { error: "An unexpected error occurred" };
           }
@@ -140,7 +137,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
               set.status = 500;
               return { error: error.message };
             }
-            console.error(error);
             set.status = 500;
             return { error: "An unexpected error occurred" };
           }
@@ -180,7 +176,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
               set.status = 500;
               return { error: error.message };
             }
-            console.error(error);
             set.status = 500;
             return { error: "An unexpected error occurred" };
           }
