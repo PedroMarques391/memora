@@ -1,4 +1,9 @@
-import { CreateDeckProps, DeckRepository, Deck as IDeck } from "@memora/core";
+import {
+  CreateDeckProps,
+  DeckRepository,
+  Deck as IDeck,
+  UpdateDeckProps,
+} from "@memora/core";
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
 import { deckTable } from "../../db/schema";
@@ -36,7 +41,17 @@ export default class Deck implements DeckRepository {
     return createdDeck;
   }
 
-  async remove(id: string): Promise<void> {}
+  async remove(id: string): Promise<void> {
+    await db.delete(deckTable).where(eq(deckTable.id, id));
+  }
 
-  async save(deck: IDeck, id: string): Promise<void> {}
+  async save(deck: UpdateDeckProps, id: string): Promise<void> {
+    await db
+      .update(deckTable)
+      .set({
+        name: deck.name,
+        description: deck.description,
+      })
+      .where(eq(deckTable.id, id));
+  }
 }
