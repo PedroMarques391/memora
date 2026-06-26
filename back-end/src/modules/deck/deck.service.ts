@@ -17,6 +17,9 @@ export default class DeckService {
   }
 
   async getDecksByUserId(userId: string) {
+    if (!userId) {
+      throw new Error("User id is required");
+    }
     return this.deckRepository.findByUserId(userId);
   }
 

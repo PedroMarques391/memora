@@ -20,10 +20,10 @@ export const deckRoutes = (app: ElysiaSetup) =>
         }
       })
       .get(
-        "/user/:userId",
-        async ({ params, set }) => {
+        "/user",
+        async ({ set, user }) => {
           try {
-            const decks = await deckService.getDecksByUserId(params.userId);
+            const decks = await deckService.getDecksByUserId(user.id);
             set.status = 200;
             return decks.map((deck) => ({
               ...deck,
@@ -37,9 +37,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
           }
         },
         {
-          params: z.object({
-            userId: z.string(),
-          }),
           response: {
             200: z.array(
               z.object({
