@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   uuid,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const deckTable = pgTable("deck", {
@@ -29,11 +30,11 @@ export const cardsTable = pgTable("card", {
     .references(() => deckTable.id, { onDelete: "cascade" }),
   front: text("front").notNull(),
   back: text("back").notNull(),
-  createdAt: timestamp("created_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .$onUpdate(() => new Date())
     .notNull(),
-  reviewCount: text("review_count").default("0").notNull(),
+  reviewCount: integer("review_count").default(0).notNull(),
 });
 
 export const user = pgTable("user", {
