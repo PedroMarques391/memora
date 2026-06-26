@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ElysiaSetup } from "../..";
+import { HttpError } from "../../utils/Errors/http.error";
 import Deck from "./deck.repository";
 import DeckService from "./deck.service";
 
@@ -10,13 +11,21 @@ export const deckRoutes = (app: ElysiaSetup) =>
   app.guard({ auth: true }, (app) =>
     app
       .get("/", () => deckService.getAllDecks())
-      .get("/:id", async ({ params, set }) => {
+      .get("/:id", async ({ params, set, user }) => {
         try {
-          return await deckService.getDeckById(params.id);
-        } catch (error) {
+          return await deckService.getDeckById(params.id, user.id);
+        } catch (error: unknown) {
+          if (error instanceof HttpError) {
+            set.status = error.status;
+            return { error: error.message };
+          }
+          if (error instanceof Error) {
+            set.status = 500;
+            return { error: error.message };
+          }
           console.error(error);
-          set.status = 404;
-          return { error: "Deck not found" };
+          set.status = 500;
+          return { error: "An unexpected error occurred" };
         }
       })
       .get(
@@ -30,10 +39,18 @@ export const deckRoutes = (app: ElysiaSetup) =>
               createdAt: deck.createdAt.toISOString(),
               updatedAt: deck.updatedAt.toISOString(),
             }));
-          } catch (error) {
+          } catch (error: unknown) {
+            if (error instanceof HttpError) {
+              set.status = error.status;
+              return { error: error.message };
+            }
+            if (error instanceof Error) {
+              set.status = 500;
+              return { error: error.message };
+            }
             console.error(error);
-            set.status = 404;
-            return { error: "Deck not found" };
+            set.status = 500;
+            return { error: "An unexpected error occurred" };
           }
         },
         {
@@ -43,8 +60,8 @@ export const deckRoutes = (app: ElysiaSetup) =>
                 id: z.string(),
                 name: z.string(),
                 description: z.string(),
-                createdAt: z.iso.datetime(),
-                updatedAt: z.iso.datetime(),
+                createdAt: z.string().datetime(),
+                updatedAt: z.string().datetime(),
               }),
             ),
             401: z.object({
@@ -58,15 +75,26 @@ export const deckRoutes = (app: ElysiaSetup) =>
       )
       .post(
         "/",
-        async ({ body, set }) => {
+        async ({ body, set, user }) => {
           try {
-            const result = await deckService.createDeck(body);
+            const result = await deckService.createDeck({
+              ...body,
+              userId: user.id,
+            });
             set.status = 201;
             return result;
-          } catch (error) {
+          } catch (error: unknown) {
+            if (error instanceof HttpError) {
+              set.status = error.status;
+              return { error: error.message };
+            }
+            if (error instanceof Error) {
+              set.status = 500;
+              return { error: error.message };
+            }
             console.error(error);
-            set.status = 400;
-            return { error: "Failed to create deck" };
+            set.status = 500;
+            return { error: "An unexpected error occurred" };
           }
         },
         {
@@ -79,7 +107,6 @@ export const deckRoutes = (app: ElysiaSetup) =>
               .string()
               .max(500, "Description must be at most 500 characters long")
               .min(1, "Description must be at least 1 character long"),
-            userId: z.string(),
           }),
           response: {
             201: z.object({
@@ -93,6 +120,96 @@ export const deckRoutes = (app: ElysiaSetup) =>
               error: z.string(),
             }),
             404: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      )
+      .delete(
+        "/:id",
+        async ({ params, set, user }) => {
+          try {
+            await deckService.deleteDeck(params.id, user.id);
+            set.status = 204;
+          } catch (error: unknown) {
+            if (error instanceof HttpError) {
+              set.status = error.status;
+              return { error: error.message };
+            }
+            if (error instanceof Error) {
+              set.status = 500;
+              return { error: error.message };
+            }
+            console.error(error);
+            set.status = 500;
+            return { error: "An unexpected error occurred" };
+          }
+        },
+        {
+          params: z.object({
+            id: z.string(),
+          }),
+          response: {
+            401: z.object({
+              error: z.string(),
+            }),
+            403: z.object({
+              error: z.string(),
+            }),
+            404: z.object({
+              error: z.string(),
+            }),
+            500: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      )
+      .put(
+        "/:id",
+        async ({ body, set, params, user }) => {
+          try {
+            await deckService.updateDeck(body, params.id, user.id);
+            set.status = 204;
+          } catch (error: unknown) {
+            if (error instanceof HttpError) {
+              set.status = error.status;
+              return { error: error.message };
+            }
+            if (error instanceof Error) {
+              set.status = 500;
+              return { error: error.message };
+            }
+            console.error(error);
+            set.status = 500;
+            return { error: "An unexpected error occurred" };
+          }
+        },
+        {
+          params: z.object({
+            id: z.string(),
+          }),
+          body: z.object({
+            name: z
+              .string()
+              .max(100, "Name must be at most 100 characters long")
+              .min(1, "Name must be at least 1 character long"),
+            description: z
+              .string()
+              .max(500, "Description must be at most 500 characters long")
+              .min(1, "Description must be at least 1 character long"),
+          }),
+          response: {
+            401: z.object({
+              error: z.string(),
+            }),
+            403: z.object({
+              error: z.string(),
+            }),
+            404: z.object({
+              error: z.string(),
+            }),
+            500: z.object({
               error: z.string(),
             }),
           },
