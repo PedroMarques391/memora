@@ -8,3 +8,4 @@ export interface Deck {
 }
 
 export type CreateDeckProps = Omit<Deck, "id" | "createdAt" | "updatedAt">;
+export type UpdateDeckProps = Pick<Deck, "name" | "description">;
