@@ -17,6 +17,13 @@ export default class Deck implements DeckRepository {
     return deck;
   }
 
+  async findByUserId(userId: string): Promise<IDeck[]> {
+    const decks = await db.query.deckTable.findMany({
+      where: eq(deckTable.userId, userId),
+    });
+    return decks;
+  }
+
   async create(deck: CreateDeckProps): Promise<IDeck> {
     const [createdDeck] = await db
       .insert(deckTable)

@@ -19,6 +19,46 @@ export const deckRoutes = (app: ElysiaSetup) =>
           return { error: "Deck not found" };
         }
       })
+      .get(
+        "/user/:userId",
+        async ({ params, set }) => {
+          try {
+            const decks = await deckService.getDecksByUserId(params.userId);
+            set.status = 200;
+            return decks.map((deck) => ({
+              ...deck,
+              createdAt: deck.createdAt.toISOString(),
+              updatedAt: deck.updatedAt.toISOString(),
+            }));
+          } catch (error) {
+            console.error(error);
+            set.status = 404;
+            return { error: "Deck not found" };
+          }
+        },
+        {
+          params: z.object({
+            userId: z.string(),
+          }),
+          response: {
+            200: z.array(
+              z.object({
+                id: z.string(),
+                name: z.string(),
+                description: z.string(),
+                createdAt: z.iso.datetime(),
+                updatedAt: z.iso.datetime(),
+              }),
+            ),
+            401: z.object({
+              error: z.string(),
+            }),
+            404: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      )
       .post(
         "/",
         async ({ body, set }) => {

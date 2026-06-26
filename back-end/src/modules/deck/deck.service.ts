@@ -16,6 +16,10 @@ export default class DeckService {
     return deck;
   }
 
+  async getDecksByUserId(userId: string) {
+    return this.deckRepository.findByUserId(userId);
+  }
+
   async createDeck(
     deck: CreateDeckProps,
   ): Promise<{ id: string; response: string }> {
