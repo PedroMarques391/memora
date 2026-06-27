@@ -1,32 +1,60 @@
 import { CardRepository, Card as ICard, UpdateCardProps } from "@memora/core";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../../db";
-import { cardsTable } from "../../db/schema";
+import { cardsTable, deckTable } from "../../db/schema";
 
 export class Card implements CardRepository {
   async findAll(): Promise<ICard[]> {
-    return db.query.cardsTable.findMany();
+    return await db.query.cardsTable.findMany();
   }
 
   async findById(id: string): Promise<ICard | undefined> {
-    return db.query.cardsTable.findFirst({ where: eq(cardsTable.cardId, id) });
-  }
-
-  async findByDeckId(deckId: string): Promise<ICard[]> {
-    return db.query.cardsTable.findMany({
-      where: eq(cardsTable.deckId, deckId),
+    return await db.query.cardsTable.findFirst({
+      where: eq(cardsTable.cardId, id),
     });
   }
 
+  async findByDeckId<T = ICard[]>(deckId: string, userId?: string): Promise<T> {
+    if (userId) {
+      const rows = await db
+        .select({
+          card: cardsTable,
+          deckName: deckTable.name,
+          deckId: deckTable.id,
+        })
+        .from(deckTable)
+        .leftJoin(cardsTable, eq(deckTable.id, cardsTable.deckId))
+        .where(and(eq(deckTable.id, deckId), eq(deckTable.userId, userId)));
+
+      if (rows.length === 0) return null as unknown as T;
+
+      const cards = rows.map((r) => r.card).filter((c) => c !== null);
+
+      return {
+        deckId: rows[0].deckId,
+        deckName: rows[0].deckName,
+        cards,
+      } as unknown as T;
+    }
+
+    const cards = await db
+      .select()
+      .from(cardsTable)
+      .where(eq(cardsTable.deckId, deckId));
+    return cards as unknown as T;
+  }
+
   async create(card: ICard): Promise<ICard> {
-    await db.insert(cardsTable).values(card);
-    return card;
+    return await db.insert(cardsTable).values(card);
   }
   async remove(cardId: string): Promise<void> {
-    await db.delete(cardsTable).where(eq(cardsTable.cardId, cardId));
+    return await db.delete(cardsTable).where(eq(cardsTable.cardId, cardId));
   }
 
   async save(card: UpdateCardProps, cardId: string): Promise<void> {
-    await db.update(cardsTable).set(card).where(eq(cardsTable.cardId, cardId));
+    return await db
+      .update(cardsTable)
+      .set(card)
+      .where(eq(cardsTable.cardId, cardId));
   }
 }
