@@ -9,8 +9,8 @@ import { HttpError } from "../../utils/Errors/http.error";
 export class CardService {
   constructor(private cardRepository: CardRepository) {}
 
-  async findAll() {
-    return this.cardRepository.findAll();
+  async findAll(userId: string): Promise<Card[]> {
+    return this.cardRepository.findAll(userId);
   }
 
   async findById(id: string) {

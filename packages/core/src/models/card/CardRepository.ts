@@ -5,6 +5,6 @@ export interface CardRepository {
   findByDeckId<T = Card[]>(deckId: string, userId?: string): Promise<T>;
   save(card: UpdateCardProps, cardId: string): Promise<void>;
   remove(cardId: string): Promise<void>;
-  findAll(): Promise<Card[]>;
+  findAll(userId: string): Promise<Card[]>;
   create(card: CreateCardProps): Promise<Card>;
 }

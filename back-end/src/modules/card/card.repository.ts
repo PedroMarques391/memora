@@ -4,8 +4,14 @@ import { db } from "../../db";
 import { cardsTable, deckTable } from "../../db/schema";
 
 export class Card implements CardRepository {
-  async findAll(): Promise<ICard[]> {
-    return await db.query.cardsTable.findMany();
+  async findAll(userId: string): Promise<ICard[]> {
+    const rows = await db
+      .select({ card: cardsTable })
+      .from(cardsTable)
+      .innerJoin(deckTable, eq(cardsTable.deckId, deckTable.id))
+      .where(eq(deckTable.userId, userId));
+
+    return rows.map((r) => r.card);
   }
 
   async findById(id: string): Promise<ICard | undefined> {
@@ -34,14 +40,14 @@ export class Card implements CardRepository {
         deckId: rows[0].deckId,
         deckName: rows[0].deckName,
         cards,
-      } as unknown as T;
+      } as T;
     }
 
     const cards = await db
       .select()
       .from(cardsTable)
       .where(eq(cardsTable.deckId, deckId));
-    return cards as unknown as T;
+    return cards as T;
   }
 
   async create(card: ICard): Promise<ICard> {

@@ -9,7 +9,7 @@ const cardService = new CardService(cardRepository);
 export const cardRoutes = (app: ElysiaSetup) =>
   app.guard({ auth: true }, (app) =>
     app
-      .get("/", async () => await cardService.findAll())
+      .get("/", async ({ user }) => await cardService.findAll(user.id))
       .post(
         "/",
         async ({ body, params }) => {
