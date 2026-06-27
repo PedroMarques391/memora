@@ -3,6 +3,7 @@ import { Elysia } from "elysia";
 import z from "zod";
 import { OpenAPI } from "./lib/auth";
 import { betterAuth } from "./macros/auth-macro";
+import { cardRoutes } from "./modules/card/card.router";
 import { deckRoutes } from "./modules/deck/deck.router";
 
 const elysiaSetup = new Elysia({ prefix: "/api/v1", name: "memora-api" })
@@ -20,6 +21,7 @@ export type ElysiaSetup = typeof elysiaSetup;
 
 const app = elysiaSetup
   .group("/decks", (app) => app.use(deckRoutes))
+  .group("/cards", (app) => app.use(cardRoutes))
   .use(
     openapi({
       documentation: {
