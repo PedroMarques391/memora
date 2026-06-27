@@ -9,14 +9,10 @@ export default class DeckService {
   }
 
   async getDeckById(id: string, userId: string) {
-    const deck = await this.deckRepository.findById(id);
+    const deck = await this.deckRepository.findById(id, userId);
 
     if (!deck) {
-      throw new HttpError(404, `Deck with id ${id} not found`);
-    }
-
-    if (deck.userId !== userId) {
-      throw new HttpError(403, "You do not have permission to view this deck");
+      throw new HttpError(404, `Deck with not found`);
     }
 
     return deck;
@@ -43,24 +39,16 @@ export default class DeckService {
   }
 
   async updateDeck(deck: UpdateDeckProps, id: string, userId: string) {
-    const hasDeck = await this.deckRepository.findById(id);
-    if (!id || !hasDeck) throw new HttpError(404, "Deck not found");
+    const hasDeck = await this.deckRepository.findById(id, userId);
+    if (!id || !hasDeck) throw new HttpError(404, "Not found deck to update.");
 
-    if (hasDeck.userId !== userId) {
-      throw new HttpError(403, "You do not have permission to update this deck");
-    }
-
-    return await this.deckRepository.save(deck, id);
+    return await this.deckRepository.save(deck, id, userId);
   }
 
   async deleteDeck(id: string, userId: string) {
-    const hasDeck = await this.deckRepository.findById(id);
-    if (!id || !hasDeck) throw new HttpError(404, "Deck not found");
+    const hasDeck = await this.deckRepository.findById(id, userId);
+    if (!id || !hasDeck) throw new HttpError(404, "Not found deck to delete.");
 
-    if (hasDeck.userId !== userId) {
-      throw new HttpError(403, "You do not have permission to delete this deck");
-    }
-
-    return await this.deckRepository.remove(id);
+    return await this.deckRepository.remove(id, userId);
   }
 }

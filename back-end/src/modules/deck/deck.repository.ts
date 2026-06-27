@@ -4,7 +4,7 @@ import {
   Deck as IDeck,
   UpdateDeckProps,
 } from "@memora/core";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { deckTable } from "../../db/schema";
 
@@ -14,9 +14,9 @@ export default class Deck implements DeckRepository {
     return decks;
   }
 
-  async findById(id: string): Promise<IDeck | undefined> {
+  async findById(id: string, userId: string): Promise<IDeck | undefined> {
     const deck = await db.query.deckTable.findFirst({
-      where: eq(deckTable.id, id),
+      where: and(eq(deckTable.id, id), eq(deckTable.userId, userId)),
     });
 
     return deck;
@@ -41,17 +41,19 @@ export default class Deck implements DeckRepository {
     return createdDeck;
   }
 
-  async remove(id: string): Promise<void> {
-    await db.delete(deckTable).where(eq(deckTable.id, id));
+  async remove(id: string, userId: string): Promise<void> {
+    await db
+      .delete(deckTable)
+      .where(and(eq(deckTable.id, id), eq(deckTable.userId, userId)));
   }
 
-  async save(deck: UpdateDeckProps, id: string): Promise<void> {
+  async save(deck: UpdateDeckProps, id: string, userId: string): Promise<void> {
     await db
       .update(deckTable)
       .set({
         name: deck.name,
         description: deck.description,
       })
-      .where(eq(deckTable.id, id));
+      .where(and(eq(deckTable.id, id), eq(deckTable.userId, userId)));
   }
 }
